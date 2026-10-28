@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>CEPA</title>
+<meta name="apple-mobile-web-app-title" content="CEPA">
+<meta name="application-name" content="CEPA">
+<meta name="theme-color" content="#13233F">
+<meta name="robots" content="noindex, nofollow">
+<meta name="referrer" content="no-referrer">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Semi+Condensed:wght@600&display=swap" rel="stylesheet">
+<style>
+:root{--tinta:#13233F;--azul:#0A3CA0;--fondo:#EDF1F5;--muted:#5E6B82}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:var(--fondo);color:var(--tinta);font:16px/1.45 Barlow,-apple-system,"Segoe UI",Roboto,sans-serif}
+main{max-width:440px;margin:0 auto;padding:40px 20px 32px;text-align:center}
+img.logo{width:120px;height:120px;border-radius:28px;background:#fff;box-shadow:0 10px 30px rgba(19,35,63,.14)}
+h1{font-family:"Barlow Semi Condensed",Barlow,sans-serif;font-weight:600;font-size:30px;margin:20px 0 4px}
+p.sub{color:var(--muted);margin:0 0 26px}
+.btn{display:block;width:100%;padding:18px;border:0;border-radius:16px;background:var(--azul);color:#fff;font:600 21px "Barlow Semi Condensed",Barlow,sans-serif;text-decoration:none}
+.btn:focus-visible{outline:3px solid #2F8FD8;outline-offset:3px}
+.pasos{text-align:left;background:#fff;border:1px solid #DCE3EC;border-radius:16px;padding:18px 18px 8px;margin-top:22px}
+.pasos h2{font-size:17px;margin:0 0 10px}
+.pasos ol{margin:0;padding-left:22px}.pasos li{margin-bottom:10px}
+.pasos b{color:var(--tinta)}
+.aviso{color:#A9480F;font-weight:600;margin-top:18px}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<main>
+  <img class="logo" src="apple-touch-icon.png" alt="Logo de Instalaciones CEPA">
+  <h1>CEPA · Fichaje</h1>
+  <p class="sub" id="sub">Tu acceso al ERP de Instalaciones CEPA</p>
+  <a class="btn" id="abrir" href="#">Abrir la app</a>
+  <section class="pasos" id="pasos">
+    <h2>Ponla en tu pantalla de inicio (solo una vez)</h2>
+    <ol id="pasosIos" hidden>
+      <li>Toca el botón <b>Compartir</b> (el cuadrado con la flecha hacia arriba).</li>
+      <li>Elige <b>Añadir a pantalla de inicio</b> y pulsa <b>Añadir</b>.</li>
+      <li>Abre la app desde el icono de CEPA y pon tu PIN la primera vez.</li>
+    </ol>
+    <ol id="pasosAnd">
+      <li>Toca el menú <b>⋮</b> del navegador (arriba a la derecha).</li>
+      <li>Elige <b>Añadir a pantalla de inicio</b> y luego <b>Añadir</b>.</li>
+      <li>Abre la app desde el icono de CEPA y pon tu PIN la primera vez.</li>
+    </ol>
+  </section>
+</main>
+<script>
+(function () {
+  var ERP = 'https://script.google.com/macros/s/AKfycbxkfGn01ob5LlVAum9nJ8HSiIw8lkNeEIhEcqQF2wW3Dz40_PtIM9BtpHa0mNp7HQkg/exec';
+  var q = new URLSearchParams(location.search), u = String(q.get('u') || '').toUpperCase().replace(/[^A-Z0-9]/g, '');
+  if (!/^[ABCDEFGHJKLMNPQRSTUVWXYZ23456789]{8}$/.test(u)) u = '';
+  var destino = ERP + (u ? '?u=' + u : '');
+  document.getElementById('abrir').href = destino;
+  var ios = /iPhone|iPad|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  if (ios) { document.getElementById('pasosIos').hidden = false; document.getElementById('pasosAnd').hidden = true; }
+  var standalone = window.navigator.standalone === true || (window.matchMedia && matchMedia('(display-mode: standalone)').matches);
+  var visto = false; try { visto = sessionStorage.getItem('cepa_visto') === '1'; sessionStorage.setItem('cepa_visto', '1'); } catch (e) {}
+  // Desde el icono de la pantalla de inicio (enlace guardado con app=1, pestaña nueva) se entra directo al ERP.
+  if ((standalone || (q.get('app') === '1' && !visto))) { document.getElementById('sub').textContent = 'Abriendo…'; location.replace(destino); return; }
+  // La primera vez (desde WhatsApp) se queda aquí para poder añadirla; el enlace que se guarda ya lleva app=1.
+  if (q.get('app') !== '1') { try { history.replaceState(null, '', location.pathname + (u ? '?u=' + u + '&' : '?') + 'app=1'); } catch (e) {} }
+})();
+</script>
+</body>
+</html>
