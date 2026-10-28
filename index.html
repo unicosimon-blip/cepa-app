@@ -9,8 +9,11 @@
 <meta name="theme-color" content="#13233F">
 <meta name="robots" content="noindex, nofollow">
 <meta name="referrer" content="no-referrer">
-<link rel="apple-touch-icon" href="apple-touch-icon.png">
-<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=2">
+<link rel="apple-touch-icon-precomposed" sizes="180x180" href="apple-touch-icon-precomposed.png?v=2">
+<link rel="manifest" href="manifest.json?v=2">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=2">
+<link rel="icon" type="image/png" sizes="512x512" href="icon-512.png?v=2">
 <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Semi+Condensed:wght@600&display=swap" rel="stylesheet">
 <style>
 :root{--tinta:#13233F;--azul:#0A3CA0;--fondo:#EDF1F5;--muted:#5E6B82}
@@ -55,6 +58,8 @@ p.sub{color:var(--muted);margin:0 0 26px}
   var ERP = 'https://script.google.com/macros/s/AKfycbxkfGn01ob5LlVAum9nJ8HSiIw8lkNeEIhEcqQF2wW3Dz40_PtIM9BtpHa0mNp7HQkg/exec';
   var q = new URLSearchParams(location.search), u = String(q.get('u') || '').toUpperCase().replace(/[^A-Z0-9]/g, '');
   if (!/^[ABCDEFGHJKLMNPQRSTUVWXYZ23456789]{8}$/.test(u)) u = '';
+  // el código se recuerda aquí por si el móvil abre el icono sin él (start_url del manifest)
+  try { if (u) localStorage.setItem('cepa_u', u); else { var g = localStorage.getItem('cepa_u') || ''; if (/^[ABCDEFGHJKLMNPQRSTUVWXYZ23456789]{8}$/.test(g)) u = g; } } catch (e) {}
   var destino = ERP + (u ? '?u=' + u : '');
   document.getElementById('abrir').href = destino;
   var ios = /iPhone|iPad|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
